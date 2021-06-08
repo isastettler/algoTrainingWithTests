@@ -14,6 +14,9 @@ Explain your solution and analyze its time and space complexities. */
                                                  # three times to the left
 
 output: 3 # since it’s the index of 2 in arr */
+
+const { expect } = require("chai");
+
 //Force brut approach:
 function shiftedArrSearch(arr, num) {
 	for (let i = 0; i < arr.length; i++) {
@@ -23,44 +26,77 @@ function shiftedArrSearch(arr, num) {
 }
 
 //regular binayr search implementation
+//---- First approach ------
+// function binarySearch(arr, num, left = 0, right = arr.length - 1) {
+// 	if (left > right) return -1;
+
+// 	let middle = Math.floor((left + right) / 2);
+// 	if (arr[middle] === num) return middle;
+// 	if (arr[middle] < num) {
+// 		left = middle + 1;
+// 		return binarySearch(arr, num, left, right);
+// 	} else {
+// 		right = middle - 1;
+// 		return binarySearch(arr, num, left, right);
+// 	}
+// }
 function binarySearch(arr, num, left = 0, right = arr.length - 1) {
-	if (left > right) return -1;
-
-	let middle = Math.floor((left + right) / 2);
-	if (arr[middle] === num) return middle;
-	if (arr[middle] < num) {
-		left = middle + 1;
-		return binarySearch(arr, num, left, right);
-	} else {
-		right = middle - 1;
-		return binarySearch(arr, num, left, right);
+	while (left <= right) {
+		let middle = Math.floor((left + right) / 2);
+		if (arr[middle] === num) return middle;
+		if (arr[middle] < num) {
+			left = middle + 1;
+		} else {
+			right = middle - 1;
+		}
 	}
+	return -1;
 }
-
 //use binary search for optimized time complexity
-//------NOT THE ANSWER------
+//----First solution -------
+// function binaryShiftedArrSearch(arr, num) {
+// 	let pivot = findPivot(arr);
+// 	if (pivot > 0) {
+// 		let left = binarySearch(arr, num, 0, pivot - 1);
+// 		let right = binarySearch(arr, num, pivot, arr.length - 1);
+// 		if (left > right) return left;
+// 		return right;
+// 	} else {
+// 		binarySearch(arr, num, 0, arr.length - 1);
+// 	}
+// }
 function binaryShiftedArrSearch(arr, num) {
 	let pivot = findPivot(arr);
-	if (pivot > 0) {
-		let left = binarySearch(arr, num, 0, pivot - 1);
-		let right = binarySearch(arr, num, pivot, arr.length - 1);
-		if (left > right) return left;
-		return right;
+	if (num > arr[0] && num < arr[pivot - 1]) {
+		return binarySearch(arr, num, 0, pivot - 1);
 	} else {
-		binarySearch(arr, num, 0, arr.length - 1);
+		return binarySearch(arr, num, pivot, arr.length - 1);
 	}
 }
+//--- First solution------
+// function findPivot(arr, start = 0, end = arr.length - 1) {
+// 	//I know that I have found the pipvot index
+// 	let middle = Math.floor((start + end) / 2);
+// 	//if the number to the left is greater than the one I am looking at
+// 	if (arr[middle - 1] > arr[middle]) return middle;
+// 	if (middle <= 0 || middle >= arr.length - 1) return 0;
+// 	let leftValue = findPivot(arr, start, middle - 1);
+// 	let rightValue = findPivot(arr, middle + 1, end);
+// 	if (leftValue > rightValue) return leftValue;
+// 	return rightValue;
+// }
 
+//try to use while loops instead of recursion for binaryShiftedArr approach
 function findPivot(arr, start = 0, end = arr.length - 1) {
-	//I know that I have found the pipvot index
 	let middle = Math.floor((start + end) / 2);
-	//if the number to the left is greater than the one I am looking at
-	if (arr[middle - 1] > arr[middle]) return middle;
-	if (middle <= 0 || middle >= arr.length - 1) return 0;
-	let leftValue = findPivot(arr, start, middle - 1);
-	let rightValue = findPivot(arr, middle + 1, end);
-	if (leftValue > rightValue) return leftValue;
-	return rightValue;
+	while (arr[middle] > arr[middle - 1] && middle > 0) {
+		if (arr[middle] > arr[end]) {
+			middle = Math.floor((middle + end) / 2);
+		} else {
+			middle = Math.floor((start + middle) / 2);
+		}
+	}
+	return middle;
 }
 
 module.exports = { shiftedArrSearch, binarySearch, binaryShiftedArrSearch };

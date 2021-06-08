@@ -36,6 +36,9 @@ describe("approach using binary search", function () {
 	it("should return the index of the searched number in the array", function () {
 		assert.strictEqual(binaryShiftedArrSearch([9, 12, 17, 2, 4, 5], 2), 3);
 	});
+	it("should return the index of the searched number in the array", function () {
+		assert.strictEqual(binaryShiftedArrSearch([9, 12, 17, 20, 2, 4, 5], 4), 5);
+	});
 	it("should return -1 if the search number does not exist in the array", function () {
 		assert.strictEqual(binaryShiftedArrSearch([9, 12, 17, 2, 4, 5], 8), -1);
 	});
